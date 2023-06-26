@@ -3,7 +3,7 @@ RUN curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash 
 WORKDIR /app
 RUN npm install -g node-gyp
 RUN git clone https://github.com/NetrisTV/ws-scrcpy.git .
-RUN npm install && npm run build
+RUN npm install && npm run dist
 RUN npm prune --production
 
 
