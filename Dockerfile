@@ -8,10 +8,12 @@ RUN npm prune --production
 
 
 FROM node:16-alpine
-MAINTAINER dolfly <dolfly@foxmail.com>
 ENV LANG C.UTF-8
 COPY --from=BUILD_IMAGE /app/dist ./dist
 COPY --from=BUILD_IMAGE /app/node_modules ./node_modules
-RUN apk --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ add android-tools
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+    apk --update-cache add coreutils android-tools bash nmap 
 EXPOSE 8000
-CMD ["node","dist/index.js"]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD [ "node", "dist/index.js" ]
