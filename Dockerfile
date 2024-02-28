@@ -12,6 +12,7 @@ ENV LANG C.UTF-8
 COPY --from=BUILD_IMAGE /app/dist ./dist
 COPY --from=BUILD_IMAGE /app/node_modules ./node_modules
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY adbconnect /app/bin/adbconnect
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
     apk --update-cache add coreutils android-tools bash nmap 
 EXPOSE 8000
