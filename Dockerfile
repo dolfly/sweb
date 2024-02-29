@@ -2,8 +2,8 @@ FROM node:16 AS BUILD_IMAGE
 RUN curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash -s -- -b /usr/local/bin
 WORKDIR /app
 RUN npm install -g node-gyp
-RUN git clone https://github.com/NetrisTV/ws-scrcpy.git .
-RUN git checkout -b v0.8.0
+RUN git clone https://github.com/dolfly/ws-scrcpy.git .
+RUN git checkout -b v0.8.1
 RUN npm install && npm run dist
 RUN npm prune --production
 
