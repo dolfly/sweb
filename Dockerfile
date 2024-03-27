@@ -7,18 +7,20 @@ RUN git checkout -b v0.8.1
 RUN npm install && npm run dist
 RUN npm prune --production
 
-FROM node:16-alpine
+FROM node:16-buster
 ENV LANG C.UTF-8
 COPY --from=BUILD_IMAGE /app/dist /app/dist
 COPY --from=BUILD_IMAGE /app/node_modules /app/node_modules
 COPY adbconnect /app/bin/adbconnect
 COPY entrypoint /app/bin/entrypoint
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
-    apk --no-cache add coreutils android-tools bash nmap && \
+COPY sources.list /etc/apt/sources.list
+RUN apt-get update  && \
+    apt-get install -y net-tools inetutils-tools bind9-dnsutils netcat socat curl wget vim cron android-tools-adb android-tools-fastboot bash nmap && \
+    apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     npm install -g pm2 && \
     chmod +x /app/bin/adbconnect && chmod +x /app/bin/entrypoint && \
     echo '* * * * * /app/bin/adbconnect' > /tmp/crontab.tmp && crontab /tmp/crontab.tmp
 WORKDIR /app
 EXPOSE 8000
 ENTRYPOINT [ "/app/bin/entrypoint" ]
-CMD [ "/usr/sbin/crond", "-f", "-d", "0" ]
+CMD [ "/bin/bash" ]
