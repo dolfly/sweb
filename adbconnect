@@ -4,13 +4,9 @@ port=5555
 ips=$(nmap -n -sP "${net}.0/24" -oG - 2>/dev/null | tail -n +2 | grep "$net" | cut -d " " -f2)
 # shellcheck disable=SC2068
 for ip in ${ips[@]}; do
-    if nc -z -w 3 "${ip}" "${port}"; then
-        adb connect "${ip}:${port}"
-    fi    
+    to_connect "${ip}" &
 done
 # disconnect unauthorized device
 adb devices  | grep -E "unauthorized|offline"  |cut -f1  | while  read -r  line ; do  
     adb disconnect "${line}";
 done
-
-pm2 restart sweb

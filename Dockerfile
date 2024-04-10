@@ -1,7 +1,10 @@
-FROM node:16 AS BUILD_IMAGE
-RUN curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | bash -s -- -b /usr/local/bin
+FROM node:16-alpine AS BUILD_IMAGE
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+RUN wget -qO- https://gobinaries.com/tj/node-prune | ash -s
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+    apk --no-cache add coreutils git python3 make gcc g++
 WORKDIR /app
-RUN npm install -g node-gyp
+RUN npm config set registry https://registry.npmmirror.com && npm install -g node-gyp
 RUN git clone --depth 1 https://github.com/dolfly/ws-scrcpy.git .
 RUN git checkout -b v0.8.1
 RUN npm install && npm run dist
