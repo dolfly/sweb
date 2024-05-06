@@ -6,7 +6,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/re
 WORKDIR /app
 RUN npm config set registry https://registry.npmmirror.com && npm install -g node-gyp
 RUN git clone --depth 1 https://github.com/dolfly/ws-scrcpy.git .
-RUN git checkout -b v0.8.1
+RUN git checkout -b v0.8.2
 RUN npm install && npm run dist
 RUN npm prune --production
 
