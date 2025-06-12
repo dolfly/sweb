@@ -1,3 +1,5 @@
 #!/bin/bash
-pm2 start /app/dist/index.js --name sweb
+[ "x${SWEB_ENABLE}" = "x1" ] && {
+    pm2 start /app/dist/index.js --name sweb
+}
 exec "$@"
